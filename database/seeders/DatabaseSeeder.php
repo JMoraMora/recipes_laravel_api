@@ -3,6 +3,10 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+use App\Models\Recipe;
+use App\Models\Tag;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -12,11 +16,24 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
+        User::factory()->create([
+            'name' => 'jaison moraa',
+            'email' => 'jaison@mail.com',
+        ]);
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        User::factory(29)->create();
+
+        $this->call([
+            CategorySeeder::class,
+            TagSeeder::class,
+            RecipeSeeder::class,
+        ]);
+
+        $recipes = Recipe::all();
+        $tags = Tag::all();
+
+        foreach ($recipes as $recipe) {
+            $recipe->tags()->attach($tags->random(rand(2, 4)));
+        }
     }
 }
