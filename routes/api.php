@@ -15,5 +15,4 @@ Route::get('categories/{category}', [CategoryController::class, 'show']);
 Route::get('tags', [TagController::class, 'index']);
 Route::get('tags/{tag}', [TagController::class, 'show']);
 
-Route::get('recipes', [RecipeController::class, 'index']);
-Route::get('recipes/{recipe}', [RecipeController::class, 'show']);
+Route::apiResource('recipes', RecipeController::class);
