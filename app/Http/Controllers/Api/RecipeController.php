@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreRecipeRequest;
+use App\Http\Requests\UpdateRecipeRequest;
 use App\Http\Resources\RecipeResource;
 use App\Models\Recipe;
 use Illuminate\Http\Request;
@@ -20,13 +22,11 @@ class RecipeController extends Controller
         return new RecipeResource($recipe->load(['category', 'tags', 'user']));
     }
 
-    public function store(Request $request)
+    public function store(StoreRecipeRequest $request)
     {
         $recipe = Recipe::create($request->all());
-
-        if($tags = json_decode($request->tags) ) {
-            $recipe->tags()->attach($tags);
-        }
+        $tags = json_decode($request->tags);
+        $recipe->tags()->attach($tags);
 
         return response()->json(
             new RecipeResource($recipe),
@@ -34,7 +34,7 @@ class RecipeController extends Controller
         );
     }
 
-    public function update(Request $request, Recipe $recipe)
+    public function update(UpdateRecipeRequest $request, Recipe $recipe)
     {
         $recipe->update($request->all());
 
