@@ -17,7 +17,7 @@ class CategoryController extends Controller
 
     public function show(Category $category)
     {
-        $categoryResource = new CategoryResource($category->load('recipes'));
+        $categoryResource = new CategoryResource($category->load('recipes.category', 'recipes.tags', 'recipes.user'));
         return $categoryResource;
     }
 }
