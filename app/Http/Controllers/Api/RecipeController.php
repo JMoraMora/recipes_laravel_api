@@ -7,7 +7,6 @@ use App\Http\Requests\StoreRecipeRequest;
 use App\Http\Requests\UpdateRecipeRequest;
 use App\Http\Resources\RecipeResource;
 use App\Models\Recipe;
-use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class RecipeController extends Controller
@@ -28,6 +27,9 @@ class RecipeController extends Controller
         $tags = json_decode($request->tags);
         $recipe->tags()->attach($tags);
 
+        $recipe->image = $request->file('image')->store('recipes', 'public');
+        $recipe->save();
+
         return response()->json(
             new RecipeResource($recipe),
             Response::HTTP_CREATED
@@ -41,6 +43,11 @@ class RecipeController extends Controller
 
         if($tags = json_decode($request->tags) ) {
             $recipe->tags()->sync($tags);
+        }
+
+        if($request->file('image')) {
+            $recipe->image = $request->file('image')->store('recipes', 'public');
+            $recipe->save();
         }
 
         return response()->json(
